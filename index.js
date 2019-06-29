@@ -2,6 +2,7 @@
 
 const { parse } = require('cjson')
 const { isString } = require('lodash')
+const { defaultTo } = require('lodash')
 const { getOptions } = require('loader-utils')
 const { escapeRegExp } = require('lodash')
 
@@ -87,7 +88,7 @@ function findConfig(configPath, resourcePath) {
 
 function htmllintLoader(source) {
   const webpack = this
-  const options = getOptions(webpack)
+  const options = defaultTo(getOptions(webpack), {})
   const callback = webpack.async()
   webpack.cacheable()
 
