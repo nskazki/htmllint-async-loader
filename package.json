@@ -21,15 +21,15 @@
     "htmllint": "^0.7.0"
   },
   "dependencies": {
-    "chalk": "2.4.1",
+    "chalk": "2.4.2",
     "cjson": "0.5.0",
-    "loader-utils": "1.1.0",
-    "lodash": "4.17.10",
-    "strip-ansi": "4.0.0",
+    "loader-utils": "1.2.3",
+    "lodash": "4.17.11",
+    "strip-ansi": "5.2.0",
     "text-table": "0.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "8.2.5",
-    "eslint": "5.0.1"
+    "babel-eslint": "10.0.2",
+    "eslint": "6.0.1"
   }
 }
