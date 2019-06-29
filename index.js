@@ -3,7 +3,6 @@
 const { parse } = require('cjson')
 const { readFile } = require('fs')
 const { isString } = require('lodash')
-const { includes } = require('lodash')
 const { getOptions } = require('loader-utils')
 const { escapeRegExp } = require('lodash')
 
@@ -34,14 +33,15 @@ function stringLength(str) {
 }
 
 function renderIssue(issue) {
-  if (issue.code === 'E011' && issue.data.value && issue.data.format)
+  if (issue.code === 'E011' && issue.data.value && issue.data.format) {
     return `'${issue.data.value}' must match ${issue.data.format}`
-  else
+  } else {
     return htmllint.messages.renderIssue(issue)
+  }
 }
 
 function stylish(resourcePath, issues) {
-  const align = ['', 'r', 'c', 'l']
+  const align = [ '', 'r', 'c', 'l' ]
   const problem = 'problem'
   const separator = ':line-col-separator:'
   const separatorRE = RegExp(`\\s*${escapeRegExp(separator)}\\s*`, 'g')
@@ -78,8 +78,9 @@ function htmllintLoader(source) {
     ? webpack.resourcePath.substr(cwd.length + 1)
     : webpack.resourcePath
 
-  if (!isString(options.config))
+  if (!isString(options.config)) {
     options.config = path.join(cwd, '.htmllintrc')
+  }
 
   readFile(options.config, 'utf8', function(err, rawConfig) {
     if (err) return callback(err)
@@ -102,5 +103,4 @@ function htmllintLoader(source) {
     })
   })
 }
-
 

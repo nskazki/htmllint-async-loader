@@ -1,40 +1,100 @@
 {
   "parser": "babel-eslint",
   "rules": {
-    "no-console": 0,
-    "no-extra-boolean-cast": 0,
-    "no-unused-vars": [ 1, {
-        "args": "all",
-        "argsIgnorePattern": "^_",
-        "caughtErrors": "all",
-        "caughtErrorsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_ignore"
+    // redundant
+    "no-console": "off",
+    "no-extra-boolean-cast": "off",
+    // text safe
+    "eol-last": [ "warn", "always" ],
+    "indent": "off",
+    "indent-legacy": [ "warn", 2 ],
+    "linebreak-style": [ "warn", "unix" ],
+    "no-trailing-spaces": "warn",
+    "no-multiple-empty-lines": [ "warn", { "max": 1 }],
+    // spacing safe
+    "key-spacing": [ "warn", { "mode": "minimum" }],
+    "arrow-spacing": "warn",
+    "block-spacing": [ "warn", "always" ],
+    "comma-spacing": "warn",
+    "keyword-spacing": "warn",
+    "space-in-parens": "warn",
+    "space-unary-ops": "warn",
+    "func-call-spacing": [ "warn", "never" ],
+    "rest-spread-spacing": "warn",
+    "space-before-blocks": "warn",
+    "object-curly-spacing": [ "warn", "always" ],
+    "array-bracket-spacing": [ "warn", "always", {
+      "arraysInArrays": false,
+      "objectsInArrays": false
     }],
-    "quotes": [ 1, "single" ],
-    "semi": [ 1, "never" ],
-    "indent": 0,
-    "indent-legacy": [ 1, 2 ],
-    "linebreak-style": [ 1, "unix" ],
-    "prefer-const": [ 1 ],
-    "no-var": [ 1 ],
-    "comma-dangle": [ 1, "never"],
-    "no-debugger": 1,
-    "no-useless-escape": 1,
-    "eqeqeq": [1, "always"],
-    "no-new-wrappers": 2,
-    "array-callback-return": 2,
-    "no-floating-decimal": 2,
-    "no-loop-func": 2,
-    "no-multi-str": 2,
-    "no-octal-escape": 2,
-    "no-self-compare": 2,
-    "no-sequences": 2,
-    "no-throw-literal": 2,
-    "no-useless-return": 2,
-    "no-shadow-restricted-names": 2,
-    "no-bitwise": 2
+    "computed-property-spacing": "warn",
+    "space-before-function-paren": [ "warn", "never" ],
+    "no-whitespace-before-property": "warn",
+    // vars safe
+    "prefer-const": "warn",
+    "no-var": "warn",
+    "no-unused-vars": [ "warn", {
+      "args": "all",
+      "argsIgnorePattern": "^_",
+      "caughtErrors": "all",
+      "caughtErrorsIgnorePattern": "^_"
+    }],
+    "no-unused-expressions": [ "warn", {
+      "allowTernary": true
+    }],
+    // vars unsafe
+    "no-shadow-restricted-names": "error",
+    // code-style safe
+    "semi": [ "warn", "never" ],
+    "curly": [ "warn", "multi-line", "consistent" ],
+    "eqeqeq": [ "warn", "always" ],
+    "quotes": [ "warn", "single", { "avoidEscape": true }],
+    "wrap-iife": "warn",
+    "brace-style": "warn",
+    "comma-style": "warn",
+    "quote-props": [ "warn", "as-needed" ],
+    "comma-dangle": [ "warn", "never"],
+    "no-extra-parens": [ "warn", "functions" ],
+    "no-new-wrappers": "warn",
+    "no-useless-call": "warn",
+    "no-throw-literal": "warn",
+    "no-empty-function": "warn",
+    "no-useless-escape": "warn",
+    "no-useless-rename": "warn",
+    "no-useless-computed-key": "warn",
+    "no-template-curly-in-string": "warn",
+    "no-misleading-character-class": "warn",
+    // code-style unsafe
+    "new-parens": "error",
+    "guard-for-in": "error",
+    "array-callback-return": "error",
+    "no-eval": "error",
+    "no-void": "error",
+    "no-with": "error",
+    "no-labels": "error",
+    "no-bitwise": "error",
+    "no-loop-func": "error",
+    "no-multi-str": "error",
+    "no-sequences": "error",
+    "no-lone-blocks": "error",
+    "no-implied-eval": "error",
+    "no-octal-escape": "error",
+    "no-self-compare": "error",
+    "no-useless-catch": "error",
+    "no-useless-return": "error",
+    "no-floating-decimal": "error",
+    "no-use-before-define": [ "error", {
+      "classes": false,
+      "variables": false,
+      "functions": false
+    }],
+    "no-unmodified-loop-condition": "error",
+    // code-style unsafe, but may be necessary during development
+    "no-alert": "warn",
+    "no-debugger": "warn"
   },
   "env": {
+    "es6": true,
     "node": true
   },
   "extends": "eslint:recommended"
