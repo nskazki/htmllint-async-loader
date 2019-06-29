@@ -1,14 +1,16 @@
 'use strict'
 
 const { parse } = require('cjson')
-const { readFile } = require('fs')
 const { isString } = require('lodash')
 const { getOptions } = require('loader-utils')
 const { escapeRegExp } = require('lodash')
 
+const fs = require('fs')
+const util = require('util')
 const path = require('path')
 const chalk = require('chalk')
 const Table = require('text-table')
+const findUp = require('find-up')
 const htmllint = require('htmllint')
 const stripAnsi = require('strip-ansi')
 
@@ -65,42 +67,53 @@ function stylish(resourcePath, issues) {
   return output
 }
 
+function readFile(resourcePath) {
+  return util.promisify(fs.readFile)(resourcePath, 'utf8')
+}
+
+function findConfig(configPath, resourcePath) {
+  if (isString(configPath)) {
+    return Promise.resolve(configPath)
+  }
+
+  return findUp('.htmllintrc', { cwd: path.dirname(resourcePath) }).then((configPath) => {
+    if (isString(configPath)) {
+      return configPath
+    } else {
+      return path.resolve('.htmllintrc')
+    }
+  })
+}
+
 function htmllintLoader(source) {
   const webpack = this
   const options = getOptions(webpack)
   const callback = webpack.async()
-
   webpack.cacheable()
-  webpack.addDependency(options.config)
 
   const cwd = process.cwd()
-  const resourcePath = webpack.resourcePath.indexOf(cwd) === 0
+  const shortResourcePath = webpack.resourcePath.indexOf(cwd) === 0
     ? webpack.resourcePath.substr(cwd.length + 1)
     : webpack.resourcePath
 
-  if (!isString(options.config)) {
-    options.config = path.join(cwd, '.htmllintrc')
-  }
-
-  readFile(options.config, 'utf8', function(err, rawConfig) {
-    if (err) return callback(err)
-
-    const config = parse(rawConfig)
+  findConfig(options.config, webpack.resourcePath).then((configPath) => {
+    webpack.addDependency(configPath)
+    return readFile(configPath).then(parse)
+  }).then((config) => {
     htmllint.use(config.plugins || [])
     delete config.plugins
-
-    htmllint(source, config).then((issues) => {
-      if (issues.length !== 0) {
-        const output = stylish(resourcePath, issues)
-        const report = new HtmlLintError(output)
-        options.failOnProblem
-          ? webpack.emitError(report)
-          : webpack.emitWarning(report)
-      }
-      callback(null, source)
-    }, (err) => {
-      callback(err)
-    })
+    return htmllint(source, config)
+  }).then((issues) => {
+    if (issues.length !== 0) {
+      const output = stylish(shortResourcePath, issues)
+      const report = new HtmlLintError(output)
+      options.failOnProblem
+        ? webpack.emitError(report)
+        : webpack.emitWarning(report)
+    }
+  }).then(() => {
+    callback(null, source)
+  }, (err) => {
+    callback(err)
   })
 }
-
