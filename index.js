@@ -1,19 +1,18 @@
 'use strict'
 
-const { parse } = require('cjson')
 const { isString } = require('lodash')
 const { defaultTo } = require('lodash')
 const { getOptions } = require('loader-utils')
 const { escapeRegExp } = require('lodash')
 
-const fs = require('fs')
-const util = require('util')
 const path = require('path')
 const chalk = require('chalk')
 const Table = require('text-table')
-const findUp = require('find-up')
 const htmllint = require('htmllint')
 const stripAnsi = require('strip-ansi')
+const cosmiconfig = require('cosmiconfig')
+
+const explorer = cosmiconfig('htmllint')
 
 module.exports = htmllintLoader
 
@@ -68,22 +67,10 @@ function stylish(resourcePath, issues) {
   return output
 }
 
-function readFile(resourcePath) {
-  return util.promisify(fs.readFile)(resourcePath, 'utf8')
-}
-
 function findConfig(configPath, resourcePath) {
-  if (isString(configPath)) {
-    return Promise.resolve(configPath)
-  }
-
-  return findUp('.htmllintrc', { cwd: path.dirname(resourcePath) }).then((configPath) => {
-    if (isString(configPath)) {
-      return configPath
-    } else {
-      return path.resolve('.htmllintrc')
-    }
-  })
+  return isString(configPath)
+    ? explorer.load(configPath)
+    : explorer.search(path.dirname(resourcePath))
 }
 
 function htmllintLoader(source) {
@@ -97,13 +84,15 @@ function htmllintLoader(source) {
     ? webpack.resourcePath.substr(cwd.length + 1)
     : webpack.resourcePath
 
-  findConfig(options.config, webpack.resourcePath).then((configPath) => {
-    webpack.addDependency(configPath)
-    return readFile(configPath).then(parse)
-  }).then((config) => {
-    htmllint.use(config.plugins || [])
-    delete config.plugins
-    return htmllint(source, config)
+  findConfig(options.config, webpack.resourcePath).then((result) => {
+    if (!result || !result.config) {
+      throw new HtmlLintError(`cannot find config for ${webpack.resourcePath}!`)
+    }
+
+    webpack.addDependency(result.filepath)
+    htmllint.use(result.config.plugins || [])
+    delete result.config.plugins
+    return htmllint(source, result.config)
   }).then((issues) => {
     if (issues.length !== 0) {
       const output = stylish(shortResourcePath, issues)
