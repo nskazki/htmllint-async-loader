@@ -24,7 +24,7 @@
     "chalk": "2.4.2",
     "cosmiconfig": "5.2.1",
     "loader-utils": "1.2.3",
-    "lodash": "4.17.11",
+    "lodash": "4.17.14",
     "strip-ansi": "5.2.0",
     "text-table": "0.2.0"
   },
