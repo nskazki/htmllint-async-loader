@@ -1,6 +1,6 @@
 {
   "name": "htmllint-async-loader",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "simple htmlint loader",
   "main": "index.js",
   "repository": "https://github.com/nskazki/htmllint-async-loader",
