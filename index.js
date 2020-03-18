@@ -2,7 +2,6 @@
 
 const { isString } = require('lodash')
 const { defaultTo } = require('lodash')
-const { getOptions } = require('loader-utils')
 const { escapeRegExp } = require('lodash')
 
 const path = require('path')
@@ -10,7 +9,9 @@ const chalk = require('chalk')
 const Table = require('text-table')
 const htmllint = require('htmllint')
 const stripAnsi = require('strip-ansi')
-const cosmiconfig = require('cosmiconfig')
+
+const { getOptions } = require('loader-utils')
+const { cosmiconfig } = require('cosmiconfig')
 
 const explorer = cosmiconfig('htmllint')
 

@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "chalk": "^3.0.0",
-    "cosmiconfig": "^5.2.1",
+    "cosmiconfig": "^6.0.0",
     "loader-utils": "^1.2.3",
     "lodash": "^4.17.15",
     "strip-ansi": "^5.2.0",
